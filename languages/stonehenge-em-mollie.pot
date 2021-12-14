@@ -1,0 +1,389 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Events Manager Pro - Mollie Payments\n"
+"POT-Creation-Date: 2020-02-15 23:54+0100\n"
+"PO-Revision-Date: 2020-02-15 23:54+0100\n"
+"Last-Translator: Patrick Buntsma <info@stonehengecreations.nl>\n"
+"Language-Team: Patrick Buntsma <info@stonehengecreations.nl>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: stonehenge-em-mollie.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: includes/class-functions.php:69
+msgid "open"
+msgstr ""
+
+#: includes/class-functions.php:70 includes/class-gateway.php:216
+#: includes/class-gateway.php:220 includes/class-gateway.php:221
+msgid "pending"
+msgstr ""
+
+#: includes/class-functions.php:71 includes/class-gateway.php:217
+msgid "paid"
+msgstr ""
+
+#: includes/class-functions.php:72 includes/class-gateway.php:219
+msgid "canceled"
+msgstr ""
+
+#: includes/class-functions.php:73
+msgid "expired"
+msgstr ""
+
+#: includes/class-functions.php:74 includes/class-gateway.php:218
+msgid "failed"
+msgstr ""
+
+#: includes/class-functions.php:75
+msgid "refunded"
+msgstr ""
+
+#: includes/class-functions.php:76
+msgid "chargeback"
+msgstr ""
+
+#: includes/class-functions.php:79
+msgid "refund"
+msgstr ""
+
+#: includes/class-functions.php:80
+msgid "charged back"
+msgstr ""
+
+#: includes/class-functions.php:83 includes/class-functions.php:100
+msgid "Bancontact"
+msgstr ""
+
+#: includes/class-functions.php:84 includes/class-functions.php:101
+msgid "Bank Transfer"
+msgstr ""
+
+#: includes/class-functions.php:85 includes/class-functions.php:102
+msgid "Belfius Pay Button"
+msgstr ""
+
+#: includes/class-functions.php:86 includes/class-functions.php:103
+msgid "Bitcoin"
+msgstr ""
+
+#: includes/class-functions.php:87 includes/class-functions.php:104
+msgid "Credit Card"
+msgstr ""
+
+#: includes/class-functions.php:88 includes/class-functions.php:105
+msgid "Direct Debit"
+msgstr ""
+
+#: includes/class-functions.php:89 includes/class-functions.php:106
+msgid "EPS"
+msgstr ""
+
+#: includes/class-functions.php:90 includes/class-functions.php:107
+msgid "Gift Card"
+msgstr ""
+
+#: includes/class-functions.php:91 includes/class-functions.php:108
+msgid "Giropay"
+msgstr ""
+
+#: includes/class-functions.php:92 includes/class-functions.php:109
+msgid "iDEAL"
+msgstr ""
+
+#: includes/class-functions.php:93 includes/class-functions.php:110
+msgid "ING Home'Pay"
+msgstr ""
+
+#: includes/class-functions.php:94 includes/class-functions.php:111
+msgid "KBC/CBC Payment Button"
+msgstr ""
+
+#: includes/class-functions.php:95 includes/class-functions.php:112
+msgid "PayPal"
+msgstr ""
+
+#: includes/class-functions.php:96 includes/class-functions.php:113
+msgid "paysafecard"
+msgstr ""
+
+#: includes/class-functions.php:97 includes/class-functions.php:114
+msgid "SOFORT Banking"
+msgstr ""
+
+#: includes/class-gateway.php:77
+msgid "Please select a payment method."
+msgstr ""
+
+#: includes/class-gateway.php:83
+msgid "Mollie API Key is not found."
+msgstr ""
+
+#: includes/class-gateway.php:102 includes/class-gateway.php:335
+#: includes/class-gateway.php:406
+#, php-format
+msgid "%s tickets for %s"
+msgstr ""
+
+#: includes/class-gateway.php:115
+msgid "%spaces% tickets for %blog_name%"
+msgstr ""
+
+#: includes/class-gateway.php:243 includes/class-gateway.php:392
+#: includes/class-gateway.php:393
+msgid "The status of your payment is"
+msgstr ""
+
+#: includes/class-gateway.php:248
+msgid "Continue"
+msgstr ""
+
+#: includes/class-gateway.php:309
+msgid "Charged back"
+msgstr ""
+
+#: includes/class-gateway.php:317
+#, php-format
+msgid "Refunded on %s"
+msgstr ""
+
+#: includes/class-gateway.php:341
+msgid "Molie API Key"
+msgstr ""
+
+#: includes/class-gateway.php:344
+#, php-format
+msgid ""
+"Obtain your Live or Test API Key from your <a href=%s target=\"_blank"
+"\">Mollie Dashboard</a>."
+msgstr ""
+
+#: includes/class-gateway.php:348
+msgid "Display Payment Methods"
+msgstr ""
+
+#: includes/class-gateway.php:351
+msgid ""
+"Display small images of the activated payment methods on your booking form?"
+msgstr ""
+
+#: includes/class-gateway.php:351
+#, php-format
+msgid ""
+"You can activate/deactivate each payment method individually in your <a href="
+"%s target=\"_blank\">Mollie Dashboard</a>."
+msgstr ""
+
+#: includes/class-gateway.php:355
+msgid "Active Payment Methods"
+msgstr ""
+
+#: includes/class-gateway.php:357
+msgid ""
+"Click here to refresh the cache if you have changed your active payment "
+"methods in the Mollie Dashboard."
+msgstr ""
+
+#: includes/class-gateway.php:357
+msgid "Clear cache"
+msgstr ""
+
+#: includes/class-gateway.php:361
+msgid "Free Booking Message"
+msgstr ""
+
+#: includes/class-gateway.php:363
+msgid ""
+"Thank you for your booking.<br>You will receive a confirmation email soon."
+msgstr ""
+
+#: includes/class-gateway.php:364
+msgid ""
+"This message will be shown if the total booking price = 0.00. Your customer "
+"will <u>not</u> be redirected to Mollie."
+msgstr ""
+
+#: includes/class-gateway.php:368
+msgid "Redirect Message"
+msgstr ""
+
+#: includes/class-gateway.php:370
+msgid "Redirecting to complete your online payment..."
+msgstr ""
+
+#: includes/class-gateway.php:371
+msgid ""
+"This message will be shown right before your customer is redirected to "
+"Mollie."
+msgstr ""
+
+#: includes/class-gateway.php:375
+msgid "Return Page"
+msgstr ""
+
+#: includes/class-gateway.php:378
+msgid "Your customer will be redirected back to this page after the payment."
+msgstr ""
+
+#: includes/class-gateway.php:378
+msgid ""
+"Leave blank to use the Single Event Page (in Single Bookings Mode) or the "
+"Events Page (in Multiple Bookings Mode)."
+msgstr ""
+
+#: includes/class-gateway.php:382
+msgid "Display Payment Status"
+msgstr ""
+
+#: includes/class-gateway.php:385
+msgid "Display the payment status on the Return Page?"
+msgstr ""
+
+#: includes/class-gateway.php:385
+msgid "The status of your payment is:"
+msgstr ""
+
+#: includes/class-gateway.php:390
+msgid "Payment Status Text"
+msgstr ""
+
+#: includes/class-gateway.php:393
+msgid "This will change the output of the setting above."
+msgstr ""
+
+#: includes/class-gateway.php:393
+msgid "Default"
+msgstr ""
+
+#: includes/class-gateway.php:397
+msgid "Display Feedback Messages"
+msgstr ""
+
+#: includes/class-gateway.php:400
+#, php-format
+msgid ""
+"Display the booking feedback messages as set in your <a href=%s target="
+"\"_blank\">Events Manager Settings</a>?"
+msgstr ""
+
+#: includes/class-gateway.php:404
+msgid "Payment Description"
+msgstr ""
+
+#: includes/class-gateway.php:407
+#, php-format
+msgid "All %s are allowed. HTML is not."
+msgstr ""
+
+#: includes/class-gateway.php:407
+msgid "Additional Placeholder"
+msgstr ""
+
+#: includes/class-gateway.php:407
+#, php-format
+msgid "You can use %s to show the name of this blog."
+msgstr ""
+
+#: includes/class-gateway.php:407
+msgid "Multiple Bookings Mode"
+msgstr ""
+
+#: includes/class-gateway.php:407
+msgid ""
+"If Multiple Bookings Mode is enabled and a user books for only one event, "
+"the payment description will be processed as a single booking."
+msgstr ""
+
+#: includes/class-gateway.php:407
+#, php-format
+msgid "Otherwise Events Manager will replace %s with \"%s\"."
+msgstr ""
+
+#: includes/class-gateway.php:407
+msgid "Multiple Events"
+msgstr ""
+
+#: includes/class-gateway.php:407
+#, php-format
+msgid "The Transactions Table wil still show \"%s\", though."
+msgstr ""
+
+#: includes/class-gateway.php:407
+#, php-format
+msgid ""
+"The deprecated wildcards from previous versions, like %s and %s, can still "
+"be used for now."
+msgstr ""
+
+#: includes/class-gateway.php:411
+msgid "Send email on failed / cancelled payment?"
+msgstr ""
+
+#: includes/class-gateway.php:414
+msgid ""
+"By default Events Manager will send the Booking Cancelled Email if a payment "
+"had failed or is incomplete. This can lead to confusion if the user rebooks "
+"right after with a successful payment. This option lets you disable sending "
+"the automatic Booking Cancelled Email. (Setting this option to \"no\" will "
+"not affect the email if you change the booking status manually.)"
+msgstr ""
+
+#: includes/class-gateway.php:444
+msgid "None"
+msgstr ""
+
+#: includes/class-gateway.php:462 includes/class-gateway.php:474
+msgid "No"
+msgstr ""
+
+#: includes/class-gateway.php:463 includes/class-gateway.php:474
+msgid "Yes"
+msgstr ""
+
+#: stonehenge-em-mollie.php:66
+msgid "Settings"
+msgstr ""
+
+#: stonehenge-em-mollie.php:82
+msgid "Donate"
+msgstr ""
+
+#: stonehenge-em-mollie.php:84
+msgid "Rate this plugin"
+msgstr ""
+
+#: stonehenge-em-mollie.php:85
+msgid "Support"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Events Manager Pro - Mollie Payments"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://www.stonehengecreations.nl/creations/stonehenge-em-mollie/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "EM Event Payments via Mollie with 18 payment methods in 31 currencies."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Stonehenge Creations"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.stonehengecreations.nl/"
+msgstr ""

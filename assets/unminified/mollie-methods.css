@@ -1,0 +1,73 @@
+#mollie-payment-methods {
+	display: block;
+}
+.mollie-method {
+	background: url(../assets/mollie-methods.png) no-repeat 0 0;
+}
+.icon {
+	display: inline-block;
+	width: 50px;
+	height: 38px;
+	margin: 5px;
+	filter: drop-shadow(2px 2px 2px DarkGray);
+}
+.applepay {
+	background-position: 0px 0px;
+}
+.bancontact {
+	background-position: -50px 0px;
+}
+.banktransfer {
+	background-position: -100px 0px;
+}
+.belfius {
+	background-position: -150px 0px;
+}
+.creditcard {
+	background-position: -200px 0px;
+}
+.directdebit {
+	background-position: 0px -38px;
+}
+.eps {
+	background-position: -50px -38px;
+}
+.giftcard {
+	background-position: -100px -38px;
+}
+.giropay {
+	background-position: -150px -38px;
+}
+.ideal {
+	background-position: -200px -38px;
+}
+.inghomepay {
+	background-position: 0px -76px;
+}
+.kbc {
+	background-position: -50px -76px;
+}
+.klarnapaylater {
+	background-position: -100px -76px;
+}
+.klarnapaynow {
+	background-position: -150px -76px;
+}
+.klarnasliceit {
+	background-position: -200px -76px;
+}
+.paypal {
+	background-position: 0px -114px;
+}
+.paysafecard {
+	background-position: -50px -114px;
+}
+.przelewy24 {
+	background-position: -100px -114px;
+}
+.sofort {
+	background-position: -150px -114px;
+}
+mybank {
+	background-position: -200px -114px;
+}
