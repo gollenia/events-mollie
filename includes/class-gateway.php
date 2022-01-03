@@ -200,8 +200,6 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 
 		if( strpos($_SERVER['REQUEST_URI'], 'em_mollie_return') !== false ) {
 			// Changed in version 2.3
-			global $EM_Mollie;
-			$style 			= null;
 			$class 			= null;
 			$feedback 		= null;
 			$result 		= null;
@@ -231,24 +229,24 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 				case 0: 	// Pending/Open
 				case 4: 	// Awaiting Online Payment.
 				case 5: 	// Awaiting Payment.
-					$class 		= 'info';
+					$class 		= 'warning';
 					$feedback 	= get_option('dbem_booking_feedback_pending');
 					// Add styling for this status only - use EM css for the others.
-					$style		= '<style>.em-booking-message-info { background-color: #d1ecf1; border: 1px solid #0c5460;}</style>';
 				break;
 			}
 			$status_string 	= get_option('em_mollie_status_text') ?? __('The status of your payment is', $this->text);
 			$status_text 	= sprintf('%s: <strong>%s</strong><br>', $status_string, strtoupper($payment_status[$status]) );
 			$status_text 	= get_option('em_mollie_show_status') != 'no' ? $status_text : null;
 			$feedback_text 	= get_option('em_mollie_show_feedback') != 'no' ? $feedback	: null;
-			$button 		= sprintf('<p><a href=%s><input type="button" value=%s class="button mollie-transaction"></a></p>',
+			$button 		= sprintf('<div class="button-group button-group--right"><a href=%s><input type="button button--white" value=%s class="button mollie-transaction"></a></div>',
 				esc_url(get_permalink(get_option('dbem_events_page'))), esc_attr__('Continue', $this->text)	);
 
-			$result 	= $style;
-			$result 	.= sprintf('<div class="em-booking-message em-booking-message-%s">', $class);
+			$result 	= sprintf('<section class="section dark py-12"><div class="container %s">', $class);
+			$result 	.= '<div class="em-booking-message">';
 			$result 	.= $status_text . $feedback_text;
 			$result		.= '</div>';
 			$result		.= $button;
+			$result		.= '</div></section>';
 
 			$content = apply_filters('em_mollie_payment_feedback', $result);
 			return $content;
@@ -399,7 +397,7 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 				'label' 	=> __('Payment Description', $text),
 				'type'		=> 'text',
 				'default' 	=> sprintf( esc_html__('%s tickets for %s', $text), '#_BOOKINGSPACES', '#_EVENTNAME'),
-				'help' 		=> sprintf( esc_html__('All %s are allowed. HTML is not.', $text), '<a href='. admin_url('edit.php?post_type=event&page=events-manager-help') .' target="_blank">Events Manager Placeholders</a>' ) .'<br><strong>' . __('Additional Placeholder', $text) .':</strong> '. sprintf( __('You can use %s to show the name of this blog.', $text), '<code>#_SITENAME</code>') .'<br>&nbsp;<br><strong>'. __('Multiple Bookings Mode', 'events-manager') .':</strong><br>' . __('If Multiple Bookings Mode is enabled and a user books for only one event, the payment description will be processed as a single booking.', $text) .' '. sprintf( __('Otherwise Events Manager will replace %s with "%s".', $text), '<code>#_EVENTNAME</code>', __('Multiple Events', 'events-manager') ) .'&nbsp;'. sprintf( __('The Transactions Table wil still show "%s", though.', $text), __('Multiple Events', 'events-manager') ) . '<br>&nbsp;<br>'. sprintf( __('The deprecated wildcards from previous versions, like %s and %s, can still be used for now.', $text), '%event_name%', '%blog_name%') ,
+				'help' 		=> sprintf( esc_html__('Shown in the payment description in your Mollie backend. All %s are allowed.', $text), '<a href='. admin_url('edit.php?post_type=event&page=events-manager-help') .' target="_blank">' . __("Events Manager Placeholders", $text) . '</a>' ),
 			),
 			array(
 				'id'		=> 'send_cancel_mail',
