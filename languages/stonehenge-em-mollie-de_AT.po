@@ -293,16 +293,16 @@ msgstr ""
 
 #: includes/class-gateway.php:404
 msgid "Payment Description"
-msgstr ""
+msgstr "Zahlungs-Beschreibung"
 
 #: includes/class-gateway.php:407
 #, php-format
-msgid "All %s are allowed. HTML is not."
-msgstr ""
+msgid "Shown in the payment description in your Mollie backend. All %s are allowed."
+msgstr "Dieser Text wird im Mollie-Backend unter Zahlungs-Beschreibung angezeigt. Alle %s sind erlaubt."
 
 #: includes/class-gateway.php:407
-msgid "Additional Placeholder"
-msgstr ""
+msgid "Events Manager Placeholders"
+msgstr "Events Manager Platzhalter"
 
 #: includes/class-gateway.php:407
 #, php-format
