@@ -3,9 +3,9 @@
 if (!defined('ABSPATH')) exit;
 
 
-#===============================================
-# 	Configure Mollie Gateway for Events Manager Pro.
-#===============================================
+/**
+ * Configure Mollie Gateway for Events Manager Pro.
+ */
 Class EM_Gateway_Mollie extends EM_Gateway {
 
 	var $gateway 		= 'mollie';
@@ -21,7 +21,8 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 			'https://www.mollie.com/dashboard/payments/%s'
 		);
 
-	#===============================================
+
+
 	public function __construct() {
 		parent::__construct();
 
@@ -37,6 +38,7 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 
 		// Check if the gateway is activated (= toggled).
 		if( parent::is_active() ) {
+			// deprecated
 			add_action('em_gateway_js', array($this, 'em_gateway_js'));
 			add_filter('em_booking_validate', array($this, 'booking_validate'), 2, 2);
 		}
@@ -45,19 +47,24 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	Add JavaScript to prevent WordPress error "Header already sent in..."
-	#===============================================
+	/**
+	 * Add JavaScript to prevent WordPress error "Header already sent in..."
+	 *
+	 * @deprecated 2.7
+	 * @return void
+	 */
 	function em_gateway_js() {
 		include dirname( __FILE__ ) . '/gateway.mollie.js';
 	}
 
 
-	#===============================================
-	# 	Booking Interception - functions that modify booking object behaviour
-	#===============================================
+	/**
+	 * Booking Interception - functions that modify booking object behaviour
+	 *
+	 * @return void
+	 */
 	function booking_form() {
-		global $EM_Booking, $EM_Event, $EM_Ticket, $EM_Mollie;
+		global $EM_Mollie;
 
 		echo get_option('em_mollie_form');
 
@@ -69,9 +76,13 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	Hook into booking validation and check validate payment type if present.
-	#===============================================
+	/**
+	 * Hook into booking validation and check validate payment type if present.
+	 *
+	 * @param boolean $result
+	 * @param EM_Booking $EM_Booking
+	 * @return boolean
+	 */
 	function booking_validate($result, $EM_Booking) {
 		if (isset( $_POST['paymentType'] ) && empty( $_POST['paymentType'] )) {
 			$EM_Booking->add_error( __('Please select a payment method.', $this->text) );
@@ -88,17 +99,20 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	After form submission by user, add Mollie vars and show feedback message.
-	#===============================================
+	/**
+	 * After form submission by user, add Mollie vars and show feedback message.
+	 *
+	 * @param string $return
+	 * @param boolean|EM_Booking $EM_Booking
+	 * @return string
+	 */
 	function booking_form_feedback( $return, $EM_Booking = true ) {
 		if( !empty($return['errors']) ) {
 			return $return;
 		}
 
-		global $wpdb, $wp_rewrite, $EM_Notices, $EM_Booking, $EM_Event, $EM_Mollie;
-		$timestamp   		= time();
-		$booking_id  		= $EM_Booking->booking_id;
+		global $EM_Booking, $EM_Mollie;
+
 		$description		= get_option('em_mollie_description') ?? sprintf( esc_html__('%s tickets for %s', $this->text), '#_BOOKINGSPACES', '#_EVENTNAME');
 
 		// Multiple Booking. (Since 2.2)
@@ -168,9 +182,11 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	Determine the redirect url after Mollie payment.
-	#===============================================
+	/**
+	 * Determine the redirect url after Mollie payment.
+	 *
+	 * @return string URL
+	 */
 	function get_mollie_return_url() {
 		global $EM_Event;
 
@@ -189,9 +205,12 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	Handle content when a user returns from Mollie after payment.
-	#===============================================
+	/**
+	 * Handle content when a user returns from Mollie after payment.
+	 *
+	 * @param string $content
+	 * @return string Page content
+	 */
 	function handle_mollie_customer_return( $content ) {
 	 	if( strpos($_SERVER['REQUEST_URI'], 'em_mollie_free') !== false ) {
 			$content = sprintf( '<p><div class="em-booking-message em-booking-message-success">%s</div></p>', get_option('em_mollie_message_free'));
@@ -255,9 +274,11 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	When Mollie calls the webhook, update database, update Booking Status & send emails.
-	#===============================================
+	/**
+	 * When Mollie calls the webhook, update database, update Booking Status & send emails.
+	 *
+	 * @return void
+	 */
 	function handle_payment_return() {
 		if( !isset($_REQUEST['em_payment_gateway']) || $_REQUEST['em_payment_gateway'] != 'mollie' || !isset($_REQUEST['id']) ) {
 			return;
@@ -319,9 +340,11 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	Gateway Settings Functions
-	#===============================================
+	/**
+	 * Gateway Settings Functions
+	 *
+	 * @return array Settings
+	 */
 	function define_settings_fields() {
 		global $EM_Mollie;
 		$text 			= $this->text;
@@ -411,9 +434,11 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	Create the Gateway Settings Page.
-	#===============================================
+	/**
+	 * Create the Gateway Settings Page.
+	 *
+	 * @return void
+	 */
 	function mysettings() {
 		global $EM_options;
 		wp_enqueue_script('em-mollie');
@@ -489,9 +514,11 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 	}
 
 
-	#===============================================
-	# 	Save or update the Gateway Settings Page options.
-	#===============================================
+	/**
+	 * Save or update the Gateway Settings Page options.
+	 *
+	 * @return boolean
+	 */
 	function update() {
 		// Hook into function of Events Manager ->handles sanitation for all inputs.
 		parent::update();
