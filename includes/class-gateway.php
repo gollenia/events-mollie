@@ -254,14 +254,14 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 				break;
 			}
 			$status_string 	= get_option('em_mollie_status_text') ?? __('The status of your payment is', $this->text);
-			$status_text 	= sprintf('%s: <strong>%s</strong><br>', $status_string, strtoupper($payment_status[$status]) );
+			$status_text 	= sprintf('<h3 class="alert__title">%s: %s</h3>', $status_string, strtoupper($payment_status[$status]) );
 			$status_text 	= get_option('em_mollie_show_status') != 'no' ? $status_text : null;
 			$feedback_text 	= get_option('em_mollie_show_feedback') != 'no' ? $feedback	: null;
-			$button 		= sprintf('<div class="button-group button-group--right"><a href=%s><input type="button button--white" value=%s class="button mollie-transaction"></a></div>',
+			$button 		= sprintf('<div class="button-group button-group--right"><a class="button button--success" href=%s>%s</a></div>',
 				esc_url(get_permalink(get_option('dbem_events_page'))), esc_attr__('Continue', $this->text)	);
 
-			$result 	= sprintf('<section class="section dark py-12"><div class="container %s">', $class);
-			$result 	.= '<div class="em-booking-message">';
+			$result 	= sprintf('<section class="section py-12"><div class="container %s">', $class);
+			$result 	.= '<div class="alert dark bg-success">';
 			$result 	.= $status_text . $feedback_text;
 			$result		.= '</div>';
 			$result		.= $button;
