@@ -2,7 +2,7 @@
 /************************************************************
 * Plugin Name:			Events Manager Pro - Mollie Payments
 * Description:			Adds 18 payment methods and 31 currencies to Events Manager Pro, instantly!
-* Version:				2.4.4
+* Version:				2.7
 * Author:  				Stonehenge Creations
 * Author URI: 			https://www.stonehengecreations.nl/
 * Plugin URI: 			https://www.stonehengecreations.nl/creations/stonehenge-em-mollie/
@@ -21,7 +21,6 @@ include_once(ABSPATH.'wp-admin/includes/plugin.php');
 
 Class Stonehenge_EM_Mollie {
 
-	#===============================================
 	public function __construct() {
 		include('includes/class-functions.php');
 		if( class_exists('EM_Gateway') ) {
@@ -33,8 +32,6 @@ Class Stonehenge_EM_Mollie {
 		add_filter('plugin_row_meta', array($this, 'add_plugin_links'), 10, 2);
 	}
 
-
-	#===============================================
 	public static function get_plugin_data() {
 		$wp 	= get_plugin_data( __FILE__ );
 		$plugin = array(
@@ -49,8 +46,6 @@ Class Stonehenge_EM_Mollie {
 		return $plugin;
 	}
 
-
-	#===============================================
 	public function load_translations() {
 		$plugin = self::get_plugin_data();
 		$text 	= $plugin['text'];
@@ -61,8 +56,6 @@ Class Stonehenge_EM_Mollie {
 		if( !$loaded ) { $loaded = load_muplugin_textdomain( $text, '/languages/' ); }
 	}
 
-
-	#===============================================
 	public function add_settings_link( $links, $file ) {
 		$plugin = self::get_plugin_data();
 		$base 	= $plugin['base'];
@@ -76,38 +69,33 @@ Class Stonehenge_EM_Mollie {
 		}
 	}
 
-
-	#===============================================
 	public function add_plugin_links( $links, $file ) {
 		$plugin = self::get_plugin_data();
 		$base 	= $plugin['base'];
 		if( $file != plugin_basename( "{$base}/{$base}.php")) {
 			return $links;
 		}
-		else {
-			$author			= 'DuisterDenHaag';
-			$donate			= 'https://useplink.com/payment/VRR7Ty32FJ5mSJe8nFSx';
-			$donate_link  	= array('&#127873; <a href="'.$donate.'" target="_blank">'.__('Donate', $base).'</a>');
-			$rate_url 		= 'https://wordpress.org/support/plugin/'. $base .'/reviews/?rate=5#new-post';
-			$rate_link 		= array(' &#11088; <a href="'.$rate_url.'" target="_blank">'. __('Rate this plugin', $base) .'</a>' );
-			$support 		= __('Support');
-			$support_link 	= array("<a href='https://wordpress.org/support/plugin/{$base}/' target='_blank'>WP Support</a>");
-			return array_merge($links, $rate_link, $donate_link, $support_link);
-		}
+
+		$author			= 'DuisterDenHaag';
+		$donate			= 'https://useplink.com/payment/VRR7Ty32FJ5mSJe8nFSx';
+		$donate_link  	= array('&#127873; <a href="'.$donate.'" target="_blank">'.__('Donate', $base).'</a>');
+		$rate_url 		= 'https://wordpress.org/support/plugin/'. $base .'/reviews/?rate=5#new-post';
+		$rate_link 		= array(' &#11088; <a href="'.$rate_url.'" target="_blank">'. __('Rate this plugin', $base) .'</a>' );
+		$support 		= __('Support');
+		$support_link 	= array("<a href='https://wordpress.org/support/plugin/{$base}/' target='_blank'>{$support}</a>");
+		return array_merge($links, $rate_link, $donate_link, $support_link);
+		
 	}
 
-
-	#===============================================
 	public function register_assets() {
 		wp_register_script('em-mollie', plugins_url('/assets/stonehenge-em-mollie.min.js', __FILE__), array('jquery'), '2.4.3', true);
 		wp_register_style('em-mollie', plugins_url('/assets/stonehenge-em-mollie.min.css', __FILE__), array(), '2.4.3', 'screen' );
 	}
 
 
-} // End class.
+}
 
 
-#===============================================
 add_action('plugins_loaded', function() {
 	if( is_plugin_active('events/events.php') ) {
 		new Stonehenge_EM_Mollie();
