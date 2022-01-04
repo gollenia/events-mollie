@@ -10,7 +10,6 @@ if( class_exists('Stonehenge_EM_Mollie') ) {
 
 Class Stonehenge_EM_Mollie_Functions {
 
-	#===============================================
 	public function __construct() {
 		$this->plugin = $this->get_plugin_data();
 
@@ -25,15 +24,17 @@ Class Stonehenge_EM_Mollie_Functions {
 		}
 	}
 
-
-	#===============================================
 	function get_plugin_data() {
 		$plugin = Stonehenge_EM_Mollie::get_plugin_data();
 		return $plugin;
 	}
 
 
-	#===============================================
+	/**
+	 * Load requirements and get API Key
+	 *
+	 * @return \Mollie\Api\MollieApiClient|boolean
+	 */
 	function start_mollie() {
 		require_once( plugin_dir_path(__DIR__). 'vendor/autoload.php' );
 
@@ -47,8 +48,6 @@ Class Stonehenge_EM_Mollie_Functions {
 		return false;
 	}
 
-
-	#===============================================
 	function get_localized_time( $input ) {
 		$UTC 	= new DateTimeZone("UTC");
 		$newTZ 	= new DateTimeZone( get_option('timezone_string') );
@@ -58,8 +57,6 @@ Class Stonehenge_EM_Mollie_Functions {
 		return $result;
 	}
 
-
-	#===============================================
 	public static function translate( $string ) {
 		global $EM_Mollie;
 		$plugin 	= $EM_Mollie->get_plugin_data();
@@ -122,9 +119,16 @@ Class Stonehenge_EM_Mollie_Functions {
 	}
 
 
-	#===============================================
+	/**
+	 * Replace wildcards with event data
+	 * 
+	 * @deprecated 2.7
+	 *
+	 * @param string $string
+	 * @return string
+	 */
 	function wildcards( $string ) {
-		global $wp_rewrite, $EM_Notices, $EM_Booking, $EM_Event;
+		global $EM_Booking, $EM_Event;
 
 		foreach( $EM_Booking->get_tickets_bookings()->tickets_bookings as $EM_Ticket_Booking ) {
 			$ticket_name = wp_kses_data( $EM_Ticket_Booking->get_ticket()->name );
@@ -155,27 +159,19 @@ Class Stonehenge_EM_Mollie_Functions {
 	}
 
 
-	#===============================================
+	
 	function update_plugin() {
 		$plugin 		= $this->plugin;
 		$old_version 	= get_option( $plugin['slug'] .'_version' );
 		$new_version	= $plugin['version'];
 
 		if( $old_version < $new_version ) {
-			// Do stuff.
-
-			// Prevent loop.
 			update_option( $plugin['slug'] .'_version', $new_version, 'no' );
 		}
 	}
 
-
-	#===============================================
-	# 	Create Admin Notices.
-	#===============================================
 	function create_admin_notices() {
 		$settingsUrl 	= esc_url_raw( admin_url() .'edit.php?post_type=event&page=events-manager-gateways&action=edit&gateway=mollie' );
-		$message 		= '';
 
 		$description = get_option('em_mollie_description');
 		if( strpos( $description, '%event' ) ) {
@@ -184,8 +180,6 @@ Class Stonehenge_EM_Mollie_Functions {
 		}
 	}
 
-
-	#===============================================
 	function placeholder_sitename( $replace, $EM_Event, $result ) {
 		if( $result === "#_SITENAME" ) {
 			$replace = esc_html( get_bloginfo( 'name' ) );
@@ -193,10 +187,13 @@ Class Stonehenge_EM_Mollie_Functions {
 		return $replace;
 	}
 
-
-	#===============================================
-	# 	Create shortcode [mollie_methods] to show a sprite image of all activted payment methods.
-	#===============================================
+	/**
+	 * Create shortcode [mollie_methods] to show a sprite image of all activted payment methods.
+	 * 
+	 * @deprecated 2.7
+	 *
+	 * @return string|boolean
+	 */
 	function mollie_methods() {
 		global $EM_Mollie;
 		$methods = $EM_Mollie->get_methods();
@@ -213,8 +210,11 @@ Class Stonehenge_EM_Mollie_Functions {
 		return;
 	}
 
-
-	#===============================================
+	/**
+	 * get payment methods
+	 *
+	 * @return array
+	 */
 	function get_methods() {
 		global $EM_Mollie;
 		if( !$EM_Mollie->start_mollie() ) {
@@ -235,7 +235,11 @@ Class Stonehenge_EM_Mollie_Functions {
 	}
 
 
-	#===============================================
+	/**
+	 * Clear option mollie_activated_methods and call get_methods
+	 *
+	 * @return void
+	 */
 	function refresh_methods() {
 		if( isset( $_GET['em_mollie_action'] )  && ( $_GET['em_mollie_action']  === 'refresh_methods' ) ) {
 			delete_option('mollie_activated_methods');
