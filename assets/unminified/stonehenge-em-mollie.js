@@ -23,3 +23,13 @@ $(document).ready(function(){
 });
 })
 (jQuery);
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    const showMethods = document.getElementById('#show_methods_no')
+
+	if (!showMethods) return;
+
+	if (showMethods.checked) {
+		
+	}
+});

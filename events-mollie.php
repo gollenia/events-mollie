@@ -1,7 +1,7 @@
 <?php
 /************************************************************
-* Plugin Name:			Events Manager Pro - Mollie Payments
-* Description:			Adds 18 payment methods and 31 currencies to Events Manager Pro, instantly!
+* Plugin Name:			Events - Mollie Payments
+* Description:			Adds 18 payment methods and 31 currencies to Events
 * Version:				2.7
 * Author:  				Stonehenge Creations
 * Author URI: 			https://www.stonehengecreations.nl/
@@ -63,7 +63,7 @@ Class Stonehenge_EM_Mollie {
 			return $links;
 		}
 		else {
-			$settings_link = sprintf( '&#128736;&#65039; <a href="%s">%s</a>', $plugin['url'], __('Settings') );
+			$settings_link = sprintf( '<a href="%s">%s</a>', $plugin['url'], __('Settings') );
 			array_unshift($links, $settings_link);
 			return $links;
 		}
@@ -83,7 +83,7 @@ Class Stonehenge_EM_Mollie {
 		$rate_link 		= array(' &#11088; <a href="'.$rate_url.'" target="_blank">'. __('Rate this plugin', $base) .'</a>' );
 		$support 		= __('Support');
 		$support_link 	= array("<a href='https://wordpress.org/support/plugin/{$base}/' target='_blank'>{$support}</a>");
-		return array_merge($links, $rate_link, $donate_link, $support_link);
+		return array_merge($links, $support_link);
 		
 	}
 
