@@ -135,14 +135,9 @@ Class Stonehenge_EM_Mollie_Functions {
 		}
 		$blog_name = get_bloginfo('name');
 
-		if( get_option('dbem_multiple_bookings') ) 	{
-			$event_name = $event_date = $blog_name;
-		}
-		else {
-			$event_date = date( get_option('dbem_date_format'), strtotime($EM_Event->start_date) ); // Return formatted date.
-			$event_name = $EM_Booking->get_event()->event_name;
-		}
-
+		$event_date = date( get_option('dbem_date_format'), strtotime($EM_Event->start_date) ); // Return formatted date.
+		$event_name = $EM_Booking->get_event()->event_name;
+		
 		$wildcards = array(
 			'%blog_name%' 		=> $blog_name,
 			'%booking_id%'		=> '#' . $EM_Booking->booking_id,
