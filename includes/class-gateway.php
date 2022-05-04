@@ -191,17 +191,9 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 		global $EM_Event;
 
 		 if( get_option('em_mollie_return_page') ){
-			 $redirect_url = get_permalink(get_option( 'em_mollie_return_page') );
+			 return get_permalink(get_option( 'em_mollie_return_page') );
 		 }
-		 else {
-			 if( get_option('dbem_multiple_bookings') )	{
-				 $redirect_url = get_permalink( get_option( 'dbem_events_page' ) );
-			 }
-			 else {
-				 $redirect_url = $EM_Event->output("#_EVENTURL");
-			 }
-		 }
-		return $redirect_url;
+		 return $EM_Event->output("#_EVENTURL");
 	}
 
 
@@ -227,12 +219,12 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 			$status 		= (int) $EM_Booking->status;
 
 			$payment_status = array(
-				0 => __('pending', $this->text),
-				1 => __('paid', $this->text),
-				2 => __('failed', $this->text),
-				3 => __('canceled', $this->text),
-				4 => __('pending', $this->text),
-				5 => __('pending', $this->text),
+				0 => "Pending",
+				1 => "Completed",
+				2 => "Failed",
+				3 => "Cancelled",
+				4 => "Pending",
+				5 => "Pending"
 			);
 
 			switch( $status ) {
