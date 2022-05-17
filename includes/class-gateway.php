@@ -75,6 +75,16 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 		return;
 	}
 
+	function get_rest() {
+		return array(
+			'name' => $this->gateway,
+			"title" => get_option('em_'.$this->gateway.'_option_name'),
+        	"html" => get_option('em_'.$this->gateway.'_form'),
+			"description" => get_option('em_'.$this->gateway.'_option_description'),
+			"methods" => get_option('mollie_activated_methods')
+		);
+	}
+
 
 	/**
 	 * Hook into booking validation and check validate payment type if present.
@@ -215,7 +225,7 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 			$feedback 		= null;
 			$result 		= null;
 			$booking_id 	= $_REQUEST['em_mollie_return'];
-			$EM_Booking 	= em_get_booking($booking_id);
+			$EM_Booking 	= EM_Booking::find($booking_id);
 			$status 		= (int) $EM_Booking->status;
 
 			$payment_status = array(
@@ -235,7 +245,7 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 				case 3:		// Cancelled
 				case 2: 	// Reject = fallback.
 					$class 		= 'error';
-					$feedback 	= get_option('dbem_booking_feedback_error');
+					$feedback 	= __('Booking could not be created','events-manager');
 				break;
 				case 0: 	// Pending/Open
 				case 4: 	// Awaiting Online Payment.
@@ -288,7 +298,7 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 		$payment 	= $mollie->payments->get($mollie_id);
 		$timestamp  = date('Y-m-d H:i:s', strtotime($payment->createdAt));
 		$booking_id = $payment->metadata->booking_id;
-		$EM_Booking	= em_get_booking($booking_id);
+		$EM_Booking	= EM_Booking::find($booking_id);
 		$note 		= ' ';
 
 		if (!empty( $EM_Booking->booking_id )) {
