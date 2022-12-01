@@ -14,7 +14,7 @@ try {
      */
     $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
     $hostname = $_SERVER['HTTP_HOST'];
-    $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+    $path = dirname($_SERVER['REQUEST_URI'] ?? $_SERVER['PHP_SELF']);
 
     /*
      * Retrieve the last created customer for this example.
@@ -36,14 +36,14 @@ try {
     $subscription = $customer->createSubscription([
         "amount" => [
             "value" => "10.00", // You must send the correct number of decimals, thus we enforce the use of strings
-            "currency" => "EUR"
+            "currency" => "EUR",
         ],
         "times" => 12,
         "interval" => "1 month",
         "description" => "Subscription #{$subscriptionId}",
-        "webhookUrl" => "{$protocol}://{$hostname}{$path}/subscriptions/webhook.php",
+        "webhookUrl" => "{$protocol}://{$hostname}{$path}/webhook.php",
         "metadata" => [
-            "subscription_id" => $subscriptionId
+            "subscription_id" => $subscriptionId,
         ],
     ]);
 

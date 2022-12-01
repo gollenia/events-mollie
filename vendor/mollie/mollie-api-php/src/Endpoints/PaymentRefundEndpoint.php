@@ -51,7 +51,7 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
      * @param string $refundId
      * @param array $parameters
      *
-     * @return \Mollie\Api\Resources\BaseResource|\Mollie\Api\Resources\Refund
+     * @return \Mollie\Api\Resources\Refund
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function getForId($paymentId, $refundId, array $parameters = [])
@@ -59,5 +59,64 @@ class PaymentRefundEndpoint extends CollectionEndpointAbstract
         $this->parentId = $paymentId;
 
         return parent::rest_read($refundId, $parameters);
+    }
+
+    /**
+     * @param Payment $payment
+     * @param array $parameters
+     *
+     * @return Refund
+     * @throws \Mollie\Api\Exceptions\ApiException
+     */
+    public function listFor(Payment $payment, array $parameters = [])
+    {
+        return $this->listForId($payment->id, $parameters);
+    }
+
+    /**
+     * @param string $paymentId
+     * @param array $parameters
+     *
+     * @return \Mollie\Api\Resources\BaseCollection|\Mollie\Api\Resources\Refund
+     * @throws \Mollie\Api\Exceptions\ApiException
+     */
+    public function listForId($paymentId, array $parameters = [])
+    {
+        $this->parentId = $paymentId;
+
+        return parent::rest_list(null, null, $parameters);
+    }
+
+
+    /**
+     * Creates a refund for a specific payment.
+     *
+     * @param Payment $payment
+     * @param array $data
+     * @param array $filters
+     *
+     * @return Refund
+     * @throws \Mollie\Api\Exceptions\ApiException
+     */
+    public function createFor(Payment $payment, array $data, array $filters = [])
+    {
+        return $this->createForId($payment->id, $data, $filters);
+    }
+
+    /**
+     * Creates a refund for a specific payment.
+     *
+     * @param string $paymentId
+     * @param array $data
+     * @param array $filters
+     *
+     * @return \Mollie\Api\Resources\Refund
+     * @throws \Mollie\Api\Exceptions\ApiException
+     */
+    public function createForId(string $paymentId, array $data, array $filters = [])
+    {
+        $this->parentId = $paymentId;
+
+        return parent::rest_create($data, $filters);
     }
 }

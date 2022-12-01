@@ -19,11 +19,11 @@ $status = database_read($_GET["order_id"]);
  */
 $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
 $hostname = $_SERVER['HTTP_HOST'];
-$path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+$path = dirname($_SERVER['REQUEST_URI'] ?? $_SERVER['PHP_SELF']);
 
 echo "<p>Your payment status is '" . htmlspecialchars($status) . "'.</p>";
 echo "<p>";
-echo '<a href="' . $protocol . '://' . $hostname . $path . '/payments/create-payment.php">Create a payment</a><br>';
-echo '<a href="' . $protocol . '://' . $hostname . $path . '/payments/create-ideal-payment.php">Create an iDEAL payment</a><br>';
-echo '<a href="' . $protocol . '://' . $hostname . $path . '/payments/list-payments.php">List payments</a><br>';
+echo '<a href="' . $protocol . '://' . $hostname . $path . '/create-payment.php">Create a payment</a><br>';
+echo '<a href="' . $protocol . '://' . $hostname . $path . '/create-ideal-payment.php">Create an iDEAL payment</a><br>';
+echo '<a href="' . $protocol . '://' . $hostname . $path . '/list-payments.php">List payments</a><br>';
 echo "</p>";

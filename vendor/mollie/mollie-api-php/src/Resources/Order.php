@@ -2,6 +2,7 @@
 
 namespace Mollie\Api\Resources;
 
+use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Types\OrderStatus;
 
@@ -90,7 +91,6 @@ class Order extends BaseResource
      * @var \stdClass
      */
     public $shippingAddress;
-
 
     /**
      * The payment method last used when paying for the order.
@@ -207,7 +207,7 @@ class Order extends BaseResource
     public $_links;
 
     /**
-     * @var \stdClass
+     * @var \stdClass|null
      */
     public $_embedded;
 
@@ -323,7 +323,7 @@ class Order extends BaseResource
      * You can pass an empty lines array if you want to cancel all eligible lines.
      * Returns null if successful.
      *
-     * @param  array|null $data
+     * @param  array $data
      * @return null
      * @throws \Mollie\Api\Exceptions\ApiException
      */
@@ -343,6 +343,7 @@ class Order extends BaseResource
     public function cancelAllLines($data = [])
     {
         $data['lines'] = [];
+
         return $this->client->orderLines->cancelFor($this, $data);
     }
 
@@ -367,6 +368,7 @@ class Order extends BaseResource
      * @param array $options
      *
      * @return Shipment
+     * @throws ApiException
      */
     public function createShipment(array $options = [])
     {
@@ -383,6 +385,7 @@ class Order extends BaseResource
     public function shipAll(array $options = [])
     {
         $options['lines'] = [];
+
         return $this->createShipment($options);
     }
 
@@ -393,6 +396,7 @@ class Order extends BaseResource
      * @param array $parameters
      *
      * @return Shipment
+     * @throws ApiException
      */
     public function getShipment($shipmentId, array $parameters = [])
     {
@@ -405,6 +409,7 @@ class Order extends BaseResource
      * @param array $parameters
      *
      * @return ShipmentCollection
+     * @throws ApiException
      */
     public function shipments(array $parameters = [])
     {
@@ -430,6 +435,7 @@ class Order extends BaseResource
      *
      * @param  array  $data
      * @return Refund
+     * @throws ApiException
      */
     public function refund(array $data)
     {
@@ -457,7 +463,7 @@ class Order extends BaseResource
      */
     public function refunds()
     {
-        if (!isset($this->_links->refunds->href)) {
+        if (! isset($this->_links->refunds->href)) {
             return new RefundCollection($this->client, 0, null);
         }
 
@@ -474,22 +480,20 @@ class Order extends BaseResource
     /**
      * Saves the order's updated billingAddress and/or shippingAddress.
      *
-     * @return \Mollie\Api\Resources\BaseResource|\Mollie\Api\Resources\Order
+     * @return \Mollie\Api\Resources\Order
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function update()
     {
-        if (!isset($this->_links->self->href)) {
-            return $this;
-        }
-
-        $body = json_encode(array(
+        $body = [
             "billingAddress" => $this->billingAddress,
             "shippingAddress" => $this->shippingAddress,
             "orderNumber" => $this->orderNumber,
-        ));
+            "redirectUrl" => $this->redirectUrl,
+            "webhookUrl" => $this->webhookUrl,
+        ];
 
-        $result = $this->client->performHttpCallToFullUrl(MollieApiClient::HTTP_PATCH, $this->_links->self->href, $body);
+        $result = $this->client->orders->update($this->id, $body);
 
         return ResourceFactory::createFromApiResult($result, new Order($this->client));
     }
@@ -497,9 +501,9 @@ class Order extends BaseResource
     /**
      * Create a new payment for this Order.
      *
-     * @param $data
+     * @param array $data
      * @param array $filters
-     * @return \Mollie\Api\Resources\BaseResource|\Mollie\Api\Resources\Payment
+     * @return \Mollie\Api\Resources\Payment
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function createPayment($data, $filters = [])
@@ -515,7 +519,7 @@ class Order extends BaseResource
      */
     public function payments()
     {
-        if(! isset($this->_embedded, $this->_embedded->payments) ) {
+        if (! isset($this->_embedded, $this->_embedded->payments)) {
             return null;
         }
 
@@ -534,7 +538,7 @@ class Order extends BaseResource
     private function getPresetOptions()
     {
         $options = [];
-        if($this->client->usesOAuth()) {
+        if ($this->client->usesOAuth()) {
             $options["testmode"] = $this->mode === "test" ? true : false;
         }
 

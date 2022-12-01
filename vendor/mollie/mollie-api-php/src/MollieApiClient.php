@@ -2,11 +2,8 @@
 
 namespace Mollie\Api;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
 use Mollie\Api\Endpoints\ChargebackEndpoint;
+use Mollie\Api\Endpoints\ClientEndpoint;
 use Mollie\Api\Endpoints\CustomerEndpoint;
 use Mollie\Api\Endpoints\CustomerPaymentsEndpoint;
 use Mollie\Api\Endpoints\InvoiceEndpoint;
@@ -17,61 +14,55 @@ use Mollie\Api\Endpoints\OrderEndpoint;
 use Mollie\Api\Endpoints\OrderLineEndpoint;
 use Mollie\Api\Endpoints\OrderPaymentEndpoint;
 use Mollie\Api\Endpoints\OrderRefundEndpoint;
-use Mollie\Api\Endpoints\PaymentCaptureEndpoint;
 use Mollie\Api\Endpoints\OrganizationEndpoint;
+use Mollie\Api\Endpoints\OrganizationPartnerEndpoint;
+use Mollie\Api\Endpoints\PaymentCaptureEndpoint;
 use Mollie\Api\Endpoints\PaymentChargebackEndpoint;
 use Mollie\Api\Endpoints\PaymentEndpoint;
+use Mollie\Api\Endpoints\PaymentLinkEndpoint;
 use Mollie\Api\Endpoints\PaymentRefundEndpoint;
+use Mollie\Api\Endpoints\PaymentRouteEndpoint;
 use Mollie\Api\Endpoints\PermissionEndpoint;
 use Mollie\Api\Endpoints\ProfileEndpoint;
 use Mollie\Api\Endpoints\ProfileMethodEndpoint;
 use Mollie\Api\Endpoints\RefundEndpoint;
+use Mollie\Api\Endpoints\SettlementPaymentEndpoint;
 use Mollie\Api\Endpoints\SettlementsEndpoint;
 use Mollie\Api\Endpoints\ShipmentEndpoint;
 use Mollie\Api\Endpoints\SubscriptionEndpoint;
 use Mollie\Api\Endpoints\WalletEndpoint;
 use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\Exceptions\HttpAdapterDoesNotSupportDebuggingException;
 use Mollie\Api\Exceptions\IncompatiblePlatform;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use Mollie\Api\HttpAdapter\MollieHttpAdapterPicker;
 
 class MollieApiClient
 {
     /**
      * Version of our client.
      */
-    const CLIENT_VERSION = "2.21.0";
+    public const CLIENT_VERSION = "2.48.0";
 
     /**
      * Endpoint of the remote API.
      */
-    const API_ENDPOINT = "https://api.mollie.com";
+    public const API_ENDPOINT = "https://api.mollie.com";
 
     /**
      * Version of the remote API.
      */
-    const API_VERSION = "v2";
+    public const API_VERSION = "v2";
 
     /**
      * HTTP Methods
      */
-    const HTTP_GET = "GET";
-    const HTTP_POST = "POST";
-    const HTTP_DELETE = "DELETE";
-    const HTTP_PATCH = "PATCH";
+    public const HTTP_GET = "GET";
+    public const HTTP_POST = "POST";
+    public const HTTP_DELETE = "DELETE";
+    public const HTTP_PATCH = "PATCH";
 
     /**
-     * HTTP status codes
-     */
-    const HTTP_NO_CONTENT = 204;
-
-    /**
-     * Default response timeout (in seconds).
-     */
-    const TIMEOUT = 10;
-
-    /**
-     * @var ClientInterface
+     * @var \Mollie\Api\HttpAdapter\MollieHttpAdapterInterface
      */
     protected $httpClient;
 
@@ -114,9 +105,18 @@ class MollieApiClient
     public $customerPayments;
 
     /**
+     * RESTful Settlement resource.
+     *
      * @var SettlementsEndpoint
      */
     public $settlements;
+
+    /**
+     * RESTful Settlement payment resource.
+     *
+     * @var \Mollie\Api\Endpoints\SettlementPaymentEndpoint
+     */
+    public $settlementPayments;
 
     /**
      * RESTful Subscription resource.
@@ -208,6 +208,13 @@ class MollieApiClient
     public $paymentRefunds;
 
     /**
+     * RESTful Payment Route resource.
+     *
+     * @var PaymentRouteEndpoint
+     */
+    public $paymentRoutes;
+
+    /**
      * RESTful Payment Captures resource.
      *
      * @var PaymentCaptureEndpoint
@@ -236,6 +243,20 @@ class MollieApiClient
     public $orderRefunds;
 
     /**
+     * Manages Payment Links requests
+     *
+     * @var PaymentLinkEndpoint
+     */
+    public $paymentLinks;
+
+    /**
+     * RESTful Onboarding resource.
+     *
+     * @var OrganizationPartnerEndpoint
+     */
+    public $organizationPartners;
+  
+    /**
      * Manages Wallet requests
      *
      * @var WalletEndpoint
@@ -258,26 +279,25 @@ class MollieApiClient
      * @var array
      */
     protected $versionStrings = [];
-    /**
-     * @var int
-     */
-    protected $lastHttpResponseStatusCode;
 
     /**
-     * @param ClientInterface $httpClient
+     * RESTful Client resource.
      *
-     * @throws IncompatiblePlatform
+     * @var ClientEndpoint
      */
-    public function __construct(ClientInterface $httpClient = null)
-    {
-        $this->httpClient = $httpClient ?
-            $httpClient :
-            new Client([
-                \GuzzleHttp\RequestOptions::VERIFY => \Composer\CaBundle\CaBundle::getBundledCaBundlePath(),
-                \GuzzleHttp\RequestOptions::TIMEOUT => self::TIMEOUT,
-            ]);
+    public $clients;
 
-        $compatibilityChecker = new CompatibilityChecker();
+    /**
+     * @param \GuzzleHttp\ClientInterface|\Mollie\Api\HttpAdapter\MollieHttpAdapterInterface|null $httpClient
+     * @param \Mollie\Api\HttpAdapter\MollieHttpAdapterPickerInterface|null $httpAdapterPicker
+     * @throws \Mollie\Api\Exceptions\IncompatiblePlatform|\Mollie\Api\Exceptions\UnrecognizedClientException
+     */
+    public function __construct($httpClient = null, $httpAdapterPicker = null)
+    {
+        $httpAdapterPicker = $httpAdapterPicker ?: new MollieHttpAdapterPicker;
+        $this->httpClient = $httpAdapterPicker->pickHttpAdapter($httpClient);
+
+        $compatibilityChecker = new CompatibilityChecker;
         $compatibilityChecker->checkCompatibility();
 
         $this->initializeEndpoints();
@@ -285,10 +305,9 @@ class MollieApiClient
         $this->addVersionString("Mollie/" . self::CLIENT_VERSION);
         $this->addVersionString("PHP/" . phpversion());
 
-        if(defined('\GuzzleHttp\ClientInterface::MAJOR_VERSION')) { // Guzzle 7
-            $this->addVersionString("Guzzle/" . ClientInterface::MAJOR_VERSION);
-        } elseif (defined('\GuzzleHttp\ClientInterface::VERSION')) { // Before Guzzle 7
-            $this->addVersionString("Guzzle/" . ClientInterface::VERSION);
+        $httpClientVersionString = $this->httpClient->versionString();
+        if ($httpClientVersionString) {
+            $this->addVersionString($httpClientVersionString);
         }
     }
 
@@ -299,6 +318,7 @@ class MollieApiClient
         $this->profileMethods = new ProfileMethodEndpoint($this);
         $this->customers = new CustomerEndpoint($this);
         $this->settlements = new SettlementsEndpoint($this);
+        $this->settlementPayments = new SettlementPaymentEndpoint($this);
         $this->subscriptions = new SubscriptionEndpoint($this);
         $this->customerPayments = new CustomerPaymentsEndpoint($this);
         $this->mandates = new MandateEndpoint($this);
@@ -315,9 +335,13 @@ class MollieApiClient
         $this->refunds = new RefundEndpoint($this);
         $this->paymentRefunds = new PaymentRefundEndpoint($this);
         $this->paymentCaptures = new PaymentCaptureEndpoint($this);
+        $this->paymentRoutes = new PaymentRouteEndpoint($this);
         $this->chargebacks = new ChargebackEndpoint($this);
         $this->paymentChargebacks = new PaymentChargebackEndpoint($this);
         $this->wallets = new WalletEndpoint($this);
+        $this->paymentLinks = new PaymentLinkEndpoint($this);
+        $this->organizationPartners = new OrganizationPartnerEndpoint($this);
+        $this->clients = new ClientEndpoint($this);
     }
 
     /**
@@ -328,6 +352,7 @@ class MollieApiClient
     public function setApiEndpoint($url)
     {
         $this->apiEndpoint = rtrim(trim($url), '/');
+
         return $this;
     }
 
@@ -340,6 +365,14 @@ class MollieApiClient
     }
 
     /**
+     * @return array
+     */
+    public function getVersionStrings()
+    {
+        return $this->versionStrings;
+    }
+
+    /**
      * @param string $apiKey The Mollie API key, starting with 'test_' or 'live_'
      *
      * @return MollieApiClient
@@ -349,12 +382,13 @@ class MollieApiClient
     {
         $apiKey = trim($apiKey);
 
-        if (!preg_match('/^(live|test)_\w{30,}$/', $apiKey)) {
+        if (! preg_match('/^(live|test)_\w{30,}$/', $apiKey)) {
             throw new ApiException("Invalid API key: '{$apiKey}'. An API key must start with 'test_' or 'live_' and must be at least 30 characters long.");
         }
 
         $this->apiKey = $apiKey;
         $this->oauthAccess = false;
+
         return $this;
     }
 
@@ -368,12 +402,13 @@ class MollieApiClient
     {
         $accessToken = trim($accessToken);
 
-        if (!preg_match('/^access_\w+$/', $accessToken)) {
+        if (! preg_match('/^access_\w+$/', $accessToken)) {
             throw new ApiException("Invalid OAuth access token: '{$accessToken}'. An access token must start with 'access_'.");
         }
 
         $this->apiKey = $accessToken;
         $this->oauthAccess = true;
+
         return $this;
     }
 
@@ -395,16 +430,57 @@ class MollieApiClient
     public function addVersionString($versionString)
     {
         $this->versionStrings[] = str_replace([" ", "\t", "\n", "\r"], '-', $versionString);
+
         return $this;
     }
 
     /**
-     * Perform an http call. This method is used by the resource specific classes. Please use the $payments property to
+     * Enable debugging mode. If debugging mode is enabled, the attempted request will be included in the ApiException.
+     * By default, debugging is disabled to prevent leaking sensitive request data into exception logs.
+     *
+     * @throws \Mollie\Api\Exceptions\HttpAdapterDoesNotSupportDebuggingException
+     */
+    public function enableDebugging()
+    {
+        if (
+            ! method_exists($this->httpClient, 'supportsDebugging')
+            || ! $this->httpClient->supportsDebugging()
+        ) {
+            throw new HttpAdapterDoesNotSupportDebuggingException(
+                "Debugging is not supported by " . get_class($this->httpClient) . "."
+            );
+        }
+
+        $this->httpClient->enableDebugging();
+    }
+
+    /**
+     * Disable debugging mode. If debugging mode is enabled, the attempted request will be included in the ApiException.
+     * By default, debugging is disabled to prevent leaking sensitive request data into exception logs.
+     *
+     * @throws \Mollie\Api\Exceptions\HttpAdapterDoesNotSupportDebuggingException
+     */
+    public function disableDebugging()
+    {
+        if (
+            ! method_exists($this->httpClient, 'supportsDebugging')
+            || ! $this->httpClient->supportsDebugging()
+        ) {
+            throw new HttpAdapterDoesNotSupportDebuggingException(
+                "Debugging is not supported by " . get_class($this->httpClient) . "."
+            );
+        }
+
+        $this->httpClient->disableDebugging();
+    }
+
+    /**
+     * Perform a http call. This method is used by the resource specific classes. Please use the $payments property to
      * perform operations on payments.
      *
      * @param string $httpMethod
      * @param string $apiMethod
-     * @param string|null|resource|StreamInterface $httpBody
+     * @param string|null $httpBody
      *
      * @return \stdClass
      * @throws ApiException
@@ -419,14 +495,14 @@ class MollieApiClient
     }
 
     /**
-     * Perform an http call to a full url. This method is used by the resource specific classes.
+     * Perform a http call to a full url. This method is used by the resource specific classes.
      *
      * @see $payments
      * @see $isuers
      *
      * @param string $httpMethod
      * @param string $url
-     * @param string|null|resource|StreamInterface $httpBody
+     * @param string|null $httpBody
      *
      * @return \stdClass|null
      * @throws ApiException
@@ -451,54 +527,15 @@ class MollieApiClient
             'User-Agent' => $userAgent,
         ];
 
+        if ($httpBody !== null) {
+            $headers['Content-Type'] = "application/json";
+        }
+
         if (function_exists("php_uname")) {
             $headers['X-Mollie-Client-Info'] = php_uname();
         }
 
-        $request = new Request($httpMethod, $url, $headers, $httpBody);
-
-        try {
-            $response = $this->httpClient->send($request, ['http_errors' => false]);
-        } catch (GuzzleException $e) {
-            throw ApiException::createFromGuzzleException($e);
-        }
-
-        if (!$response) {
-            throw new ApiException("Did not receive API response.");
-        }
-
-        return $this->parseResponseBody($response);
-    }
-
-    /**
-     * Parse the PSR-7 Response body
-     *
-     * @param ResponseInterface $response
-     * @return \stdClass|null
-     * @throws ApiException
-     */
-    private function parseResponseBody(ResponseInterface $response)
-    {
-        $body = (string) $response->getBody();
-        if (empty($body)) {
-            if ($response->getStatusCode() === self::HTTP_NO_CONTENT) {
-                return null;
-            }
-
-            throw new ApiException("No response body found.");
-        }
-
-        $object = @json_decode($body);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new ApiException("Unable to decode Mollie response: '{$body}'.");
-        }
-
-        if ($response->getStatusCode() >= 400) {
-            throw ApiException::createFromResponse($response);
-        }
-
-        return $object;
+        return $this->httpClient->send($httpMethod, $url, $headers, $httpBody);
     }
 
     /**
@@ -522,8 +559,7 @@ class MollieApiClient
     /**
      * When unserializing a collection or a resource, this class should restore itself.
      *
-     * Note that if you use a custom GuzzleClient, this client is lost. You can't re set the Client, so you should
-     * probably not use this feature.
+     * Note that if you have set an HttpAdapter, this adapter is lost on wakeup and reset to the default one.
      *
      * @throws IncompatiblePlatform If suddenly unserialized on an incompatible platform.
      */
