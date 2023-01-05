@@ -84,16 +84,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v2.48.0",
+            "version": "v2.50.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "b15f8a14715ee740bec64e66a539527967abbf26"
+                "reference": "2291b114ec636392e3e48b73d33199b3b4a790d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/b15f8a14715ee740bec64e66a539527967abbf26",
-                "reference": "b15f8a14715ee740bec64e66a539527967abbf26",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/2291b114ec636392e3e48b73d33199b3b4a790d5",
+                "reference": "2291b114ec636392e3e48b73d33199b3b4a790d5",
                 "shasum": ""
             },
             "require": {
@@ -170,9 +170,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v2.48.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v2.50.0"
             },
-            "time": "2022-11-03T20:01:50+00:00"
+            "time": "2023-01-02T08:49:24+00:00"
         }
     ],
     "packages-dev": [],

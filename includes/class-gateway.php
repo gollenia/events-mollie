@@ -229,12 +229,30 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 			$status 		= (int) $EM_Booking->status;
 
 			$payment_status = array(
-				0 => "Pending",
-				1 => "Completed",
-				2 => "Failed",
-				3 => "Cancelled",
-				4 => "Pending",
-				5 => "Pending"
+				0 => __("Pending", $this->text),
+				1 => __("Paid", $this->text),
+				2 => __("Failed", $this->text),
+				3 => __("Cancelled", $this->text),
+				4 => __("Pending", $this->text),
+				5 => __("Pending", $this->text),
+			);
+
+			$payment_icons = array(
+				0 => "help_outline",
+				1 => "done",
+				2 => "close",
+				3 => "remove",
+				4 => "help_outline",
+				5 => "help_outline"
+			);
+
+			$payment_color = array(
+				0 => "#f2ab00",
+				1 => "#39a80f",
+				2 => "#ff4600",
+				3 => "#ff4600",
+				4 => "#f2ab00",
+				5 => "#f2ab00"
 			);
 
 			switch( $status ) {
@@ -259,13 +277,13 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 			$status_text 	= sprintf('<h3 class="alert__title">%s: %s</h3>', $status_string, strtoupper($payment_status[$status]) );
 			$status_text 	= get_option('em_mollie_show_status') != 'no' ? $status_text : null;
 			$feedback_text 	= get_option('em_mollie_show_feedback') != 'no' ? $feedback	: null;
-			$button 		= sprintf('<div class="button-group button-group--right"><a class="button button--success" href=%s>%s</a></div>',
+			$button 		= sprintf('<div class="button-group button-group--right"><a class="button button--primary" href=%s>%s</a></div>',
 				esc_url(get_permalink(get_option('dbem_events_page'))), esc_attr__('Continue', $this->text)	);
 
-			$result 	= sprintf('<section class="section py-12"><div class="container %s">', $class);
-			$result 	.= '<div class="alert dark bg-success">';
-			$result 	.= $status_text . $feedback_text;
-			$result		.= '</div>';
+			$result 	= sprintf('<section class="section py-12">', $class);
+			$result 	.= '<div class="alert dark bg-gray-200 flex" style="align-items: center; gap: 1rem">';
+			$result 	.= '<i class="material-icons" style="padding: 5px; color: #fff; background: ' . $payment_color[$status] . '; border-radius: 999px; font-size: 2rem;">' . $payment_icons[$status] . '</i>';
+			$result 	.= '<div>' . $status_text . $feedback_text . '</div>';
 			$result		.= $button;
 			$result		.= '</div></section>';
 
