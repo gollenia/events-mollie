@@ -146,6 +146,22 @@ msgstr "%spaces% kaartjes voor %blog_name%"
 msgid "The status of your payment is"
 msgstr "De status van je betaling is"
 
+#: includes/class-gateway.php:223
+msgid "Pending"
+msgstr "Ausstehend"
+
+#: includes/class-gateway.php:224
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: includes/class-gateway.php:225
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+#: includes/class-gateway.php:226
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
 #: includes/class-gateway.php:248
 msgid "Continue"
 msgstr "Doorgaan"
