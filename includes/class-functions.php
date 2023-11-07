@@ -10,6 +10,8 @@ if( class_exists('Stonehenge_EM_Mollie') ) {
 
 Class Stonehenge_EM_Mollie_Functions {
 
+	public $plugin;
+
 	public function __construct() {
 		$this->plugin = $this->get_plugin_data();
 

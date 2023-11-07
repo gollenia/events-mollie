@@ -21,7 +21,9 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 			'https://www.mollie.com/dashboard/payments/%s'
 		);
 
-
+	var $plugin;
+	var $text;
+	var $mollie;
 
 	public function __construct() {
 		parent::__construct();
