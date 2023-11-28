@@ -282,12 +282,11 @@ Class EM_Gateway_Mollie extends EM_Gateway {
 			$button 		= sprintf('<div class="button-group button-group--right"><a class="button button--primary" href=%s>%s</a></div>',
 				esc_url(get_permalink(get_option('dbem_events_page'))), esc_attr__('Continue', $this->text)	);
 
-			$result 	= sprintf('<section class="section py-12">', $class);
-			$result 	.= '<div class="alert dark bg-gray-200 flex" style="align-items: center; gap: 1rem">';
-			$result 	.= '<i class="material-icons" style="padding: 5px; color: #fff; background: ' . $payment_color[$status] . '; border-radius: 999px; font-size: 2rem;">' . $payment_icons[$status] . '</i>';
-			$result 	.= '<div>' . $status_text . $feedback_text . '</div>';
+			$result 	= sprintf('<section class="section py-12 %s" style="max-width: 33%%;">', $class);
+			$result 	.= '<div class="card card--shadow bg-white card__image-top">';
+			$result 	.= '<div class="card__content"><div class="card__title">' . $status_text . '</div><div class="card__text">' . $feedback_text . '</div>';
 			$result		.= $button;
-			$result		.= '</div></section>';
+			$result		.= '</div></div></section>';
 
 			$content = apply_filters('em_mollie_payment_feedback', $result);
 			return $content;
